@@ -54,7 +54,7 @@ func (e Entry) String() string {
 	return fmt.Sprintf("%s:%d:%d: %s: %s", e.Filename, e.Lnum, e.Col, e.Kind(), e.Text)
 }
 
-// Kind returns the error kind. Kakoune only support Warning or Error.
+// Kind returns the error kind. Kakoune only supports Warning or Error.
 // See: https://github.com/reviewdog/errorformat/blob/55531c7dabdfad07a928152b1c6eb9dcd2eb3bdb/errorformat.go#L138
 func (e Entry) Kind() string {
 	switch kind := e.Types(); {

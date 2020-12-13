@@ -15,8 +15,8 @@ func TestKakLint(t *testing.T) {
 
 type stubConfig struct{}
 
-func (cfg stubConfig) Get(filetype string) (cmd, efm []string, err error) {
-	return []string{"php", "-l"}, []string{"%m in %f on line %l", "%-G%.%#"}, nil
+func (cfg stubConfig) Get(filetype string) (cmd, efm []string, global bool, err error) {
+	return []string{"php", "-l"}, []string{"%m in %f on line %l", "%-G%.%#"}, false, nil
 }
 
 const phpError = `

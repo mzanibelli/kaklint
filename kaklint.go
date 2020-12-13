@@ -23,13 +23,7 @@ type Linter interface {
 
 // Config reads configuration for a given file type.
 type Config interface {
-	Get(filetype string) (cmd, efm []string, err error)
-}
-
-// FileType holds configuration for a specific file type.
-type FileType interface {
-	Cmd() []string
-	Efm() []string
+	Get(filetype string) (cmd, efm []string, global bool, err error)
 }
 
 // KakLint lints files and reshapes error messages.
@@ -46,14 +40,20 @@ func New(config Config, linter Linter, output io.Writer) *KakLint {
 
 // Lint runs the linter and formats results into Kakoune's format.
 func (kl KakLint) Lint(filetype, target string) error {
-	cmd, efm, err := kl.config.Get(filetype)
+	cmd, efm, global, err := kl.config.Get(filetype)
 	if err != nil {
 		return err
 	}
 
+	// If global is set, run the linter without arguments.
+	// TODO: move to git top-level if any?
+	if !global {
+		cmd = append(cmd, target)
+	}
+
 	// Store error for later use since a linter failure generally
 	// means something is there for us to parse.
-	output, lintErr := kl.linter.Run(append(cmd, target))
+	output, lintErr := kl.linter.Run(cmd)
 
 	messages, err := errfmt.Parse(output, efm)
 	if err != nil {

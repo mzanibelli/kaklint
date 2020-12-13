@@ -25,11 +25,11 @@ func TestConfig(t *testing.T) {
 	}
 
 	var missingConfigErr config.ErrMissingConfiguration
-	if _, _, err := cfg.Get("unknown"); err == nil || !errors.As(err, &missingConfigErr) {
+	if _, _, _, err := cfg.Get("unknown"); err == nil || !errors.As(err, &missingConfigErr) {
 		t.Error("config should return ErrMissingConfiguration")
 	}
 
-	cmd, _, err := cfg.Get("php")
+	cmd, _, _, err := cfg.Get("php")
 	if err != nil {
 		t.Error(err)
 	}

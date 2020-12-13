@@ -40,11 +40,11 @@ func New(filename string) (*Config, error) {
 }
 
 // Get returns the configuration for a given filetype.
-func (cfg *Config) Get(filetype string) ([]string, []string, error) {
+func (cfg *Config) Get(filetype string) ([]string, []string, bool, error) {
 	if entry, ok := cfg.linters[filetype]; ok {
-		return entry.Cmd, entry.Efm, nil
+		return entry.Cmd, entry.Efm, entry.Global, nil
 	}
-	return nil, nil, ErrMissingConfiguration{filetype}
+	return nil, nil, false, ErrMissingConfiguration{filetype}
 }
 
 // ErrMissingConfiguration is returned upon missing configuration for filetype.
@@ -57,6 +57,7 @@ func (err ErrMissingConfiguration) Error() string {
 
 // FileType is a configuration entry.
 type FileType struct {
-	Cmd []string `json:"cmd"`
-	Efm []string `json:"efm"`
+	Cmd    []string `json:"cmd"`
+	Efm    []string `json:"efm"`
+	Global bool     `json:"global"`
 }

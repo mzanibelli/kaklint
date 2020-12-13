@@ -1,0 +1,4 @@
+github.com/haya14busa/go-checkstyle v0.0.0-20170303121022-5e9d09f51fa1/go.mod h1:RsN5RGgVYeXpcXNtWyztD5VIe7VNSEqpJvF2iEH7QvI=
+github.com/haya14busa/go-sarif v0.0.0-20200721090635-d2343efc5d00/go.mod h1:1Hkn3JseGMB/hv1ywzkapVQDWV3bFgp6POZobZmR/5g=
+github.com/reviewdog/errorformat v0.0.0-20201213134116-55531c7dabdf h1:IIovZUdX4/KCbfRJpQ17dMMwa2jb2K7V9QhgyBelE38=
+github.com/reviewdog/errorformat v0.0.0-20201213134116-55531c7dabdf/go.mod h1:Akd5vemrJaAHgnEOFrC4yMbEKaOsddwF1LKkfovSFI8=

@@ -1,0 +1,18 @@
+{
+  "go": {
+    "cmd": ["golint"]
+  },
+  "sh": {
+    "cmd": ["shellcheck", "-f", "gcc"]
+  },
+  "rust": {
+    "cmd": ["cargo", "check", "--quiet", "--offline"]
+  },
+  "php": {
+    "cmd": ["php", "-l"],
+    "efm": ["%m in %f on line %l", "%-G%.%#"]
+  },
+  "javascript": {
+    "cmd": ["eslint"]
+  }
+}

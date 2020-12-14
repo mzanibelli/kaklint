@@ -1,0 +1,5 @@
+#!/bin/sh
+
+file="some file"
+
+echo $file

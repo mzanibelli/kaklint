@@ -23,7 +23,7 @@ func init() {
 // Config holds the configuration. It maps a file type to a configuration
 // entry.
 type Config struct {
-	linters map[string]FileType
+	linters map[string]Linter
 }
 
 // New decodes JSON configuration from the given files and creates a new Config object.
@@ -39,24 +39,24 @@ func New(filename string) (*Config, error) {
 	return cfg, nil
 }
 
-// Get returns the configuration for a given filetype.
-func (cfg *Config) Get(filetype string) ([]string, []string, bool, error) {
-	if entry, ok := cfg.linters[filetype]; ok {
+// Get returns the configuration for a given linter.
+func (cfg *Config) Get(linter string) ([]string, []string, bool, error) {
+	if entry, ok := cfg.linters[linter]; ok {
 		return entry.Cmd, entry.Efm, entry.Global, nil
 	}
-	return nil, nil, false, ErrMissingConfiguration{filetype}
+	return nil, nil, false, ErrMissingConfiguration{linter}
 }
 
 // ErrMissingConfiguration is returned upon missing configuration for filetype.
-type ErrMissingConfiguration struct{ filetype string }
+type ErrMissingConfiguration struct{ linter string }
 
 // Error implements standard error for ErrMissingConfiguration.
 func (err ErrMissingConfiguration) Error() string {
-	return fmt.Sprintf("missing configuration for filetype: %s", err.filetype)
+	return fmt.Sprintf("missing configuration for linter: %s", err.linter)
 }
 
-// FileType is a configuration entry.
-type FileType struct {
+// Linter is a configuration entry.
+type Linter struct {
 	Cmd    []string `json:"cmd"`
 	Efm    []string `json:"efm"`
 	Global bool     `json:"global"`

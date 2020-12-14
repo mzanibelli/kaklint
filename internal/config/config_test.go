@@ -19,7 +19,7 @@ func TestConfig(t *testing.T) {
 		t.Error(err)
 	}
 
-	cfg, err := config.New(path.Join(cwd, "..", "..", "testdata", "config.json"))
+	cfg, err := config.New(path.Join(cwd, "..", "..", "testdata", "kaklint.json"))
 	if err != nil {
 		t.Error(err)
 	}

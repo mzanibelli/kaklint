@@ -1,0 +1,5 @@
+testdata/snapshots/shellcheck-note/input:2:10: warning: Did you forget to close this double quoted string? [SC1078]
+testdata/snapshots/shellcheck-note/input:3:8: error: This is actually an end quote, but due to next char it looks suspect. [SC1079]
+testdata/snapshots/shellcheck-note/input:3:14: error: Couldn't parse this double quoted string. Fix to allow more checks. [SC1073]
+testdata/snapshots/shellcheck-note/input:3:14: error: The mentioned syntax error was in this double quoted string. [SC1009]
+testdata/snapshots/shellcheck-note/input:4:1: error: Expected end of double quoted string. Fix any mentioned problems and try again. [SC1072]

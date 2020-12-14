@@ -40,6 +40,8 @@ func newEntry(e *errorformat.Entry) Entry {
 const (
 	// Info is a kind of entry that represents a informational message.
 	Info string = "info"
+	// Note is a kind of entry that represents a simple note.
+	Note string = "note"
 	// Warning is a kind of entry that represents a warning message.
 	Warning string = "warning"
 	// Error is a kind of entry that represents an error message.
@@ -58,6 +60,12 @@ func (e Entry) String() string {
 // See: https://github.com/reviewdog/errorformat/blob/55531c7dabdfad07a928152b1c6eb9dcd2eb3bdb/errorformat.go#L138
 func (e Entry) Kind() string {
 	switch kind := e.Types(); {
+
+	// Third-party lib doesn't seem to support notes. If they do
+	// one day, some tests should break (shellcheck-note).
+	case strings.Index(kind, Note) == 0:
+		return Warning
+
 	case strings.Index(kind, Info) == 0:
 		return Warning
 	case strings.Index(kind, Warning) == 0:

@@ -21,9 +21,9 @@ type Linter interface {
 	Run(args []string) ([]byte, error)
 }
 
-// Config reads configuration for a given file type.
+// Config reads configuration for a given linter.
 type Config interface {
-	Get(filetype string) (cmd, efm []string, global bool, err error)
+	Get(linter string) (cmd, efm []string, global bool, err error)
 }
 
 // KakLint lints files and reshapes error messages.
@@ -39,8 +39,8 @@ func New(config Config, linter Linter, output io.Writer) *KakLint {
 }
 
 // Lint runs the linter and formats results into Kakoune's format.
-func (kl KakLint) Lint(filetype, target string) error {
-	cmd, efm, global, err := kl.config.Get(filetype)
+func (kl KakLint) Lint(linter, target string) error {
+	cmd, efm, global, err := kl.config.Get(linter)
 	if err != nil {
 		return err
 	}

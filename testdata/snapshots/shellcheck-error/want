@@ -1,0 +1,1 @@
+testdata/snapshots/shellcheck-error/input:5:6: error: Double quote to prevent globbing and word splitting. [SC2086]

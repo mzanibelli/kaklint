@@ -34,7 +34,7 @@ func newEntry(e *errorformat.Entry) Entry {
 	if e.Col == 0 {
 		e.Col = 1
 	}
-	return Entry{kind(e), mess(e)}
+	return Entry{flag(e), mess(e)}
 }
 
 const (
@@ -50,12 +50,12 @@ const (
 
 // Entry is a wrapper to errorformat.Entry.
 type Entry struct {
-	Kind string
+	Flag string
 	Mess string
 }
 
 // See: https://github.com/reviewdog/errorformat/blob/55531c7dabdfad07a928152b1c6eb9dcd2eb3bdb/errorformat.go#L138
-func kind(e *errorformat.Entry) string {
+func flag(e *errorformat.Entry) string {
 	var icon string
 
 	switch kind := e.Types(); {

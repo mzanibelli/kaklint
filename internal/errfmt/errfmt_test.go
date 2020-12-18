@@ -24,7 +24,7 @@ func TestErrfmt(t *testing.T) {
 	}
 
 	want := `"5|x"`
-	got := fmt.Sprint(entries[0].Kind)
+	got := fmt.Sprint(entries[0].Flag)
 	if want != got {
 		t.Errorf("want: %s, got: %s", want, got)
 	}

@@ -39,7 +39,7 @@ func New(config Config, linter Linter, output io.Writer) *KakLint {
 }
 
 const tpl = `{{if len . -}}
-set-option buffer lint_flags %val{timestamp}{{range .}} {{.Kind}}{{end}}
+set-option buffer lint_flags %val{timestamp}{{range .}} {{.Flag}}{{end}}
 set-option buffer lint_messages %val{timestamp}{{range .}} {{.Mess}}{{end}}
 lint-show-diagnostics
 {{else -}}

@@ -2,13 +2,10 @@ package kaklint_test
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"kaklint"
 	"kaklint/internal/config"
-	"kaklint/internal/linter"
 	"os"
-	"os/exec"
 	"path"
 	"strings"
 	"testing"
@@ -26,7 +23,7 @@ func TestKakLint(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	kl := kaklint.New(cfg, linter.Default, out)
+	kl := kaklint.New(cfg, out)
 
 	tests, err := snapshots()
 	if err != nil {
@@ -46,10 +43,6 @@ func check(
 ) func(t *testing.T) {
 	return func(t *testing.T) {
 		defer out.Reset()
-
-		if err := installed(cfg, test.linter); err != nil {
-			t.Skip(err)
-		}
 
 		err := kl.Lint(test.linter, test.input)
 		if err != nil {
@@ -110,18 +103,4 @@ func parse(root string, fi os.FileInfo) (snapshot, error) {
 	ft := strings.TrimSpace(string(linter))
 
 	return snapshot{fi.Name(), ft, input, want}, nil
-}
-
-func installed(cfg *config.Config, linter string) error {
-	cmd, _, _, err := cfg.Get(linter)
-	if err != nil {
-		return fmt.Errorf("missing configuration: %s", linter)
-	}
-
-	_, err = exec.LookPath(cmd[0])
-	if err != nil {
-		return fmt.Errorf("missing executable: %s", cmd[0])
-	}
-
-	return nil
 }

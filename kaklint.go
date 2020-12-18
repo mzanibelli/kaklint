@@ -4,8 +4,8 @@ import (
 	"io"
 	"kaklint/internal/config"
 	"kaklint/internal/errfmt"
-	"kaklint/internal/linter"
 	"os"
+	"os/exec"
 	"text/template"
 )
 
@@ -13,32 +13,21 @@ import (
 var Default *KakLint
 
 func init() {
-	Default = New(config.Default, linter.Default, os.Stdout)
-}
-
-// Linter is a runnable external program that produces output.
-type Linter interface {
-	Run(args []string) ([]byte, error)
-}
-
-// Config reads configuration for a given linter.
-type Config interface {
-	Get(linter string) (cmd, efm []string, global bool, err error)
+	Default = New(config.Default, os.Stdout)
 }
 
 // KakLint lints files and reshapes error messages.
 type KakLint struct {
-	config Config
-	linter Linter
+	config *config.Config
 	output io.Writer
 }
 
 // New returns a new instance.
-func New(config Config, linter Linter, output io.Writer) *KakLint {
-	return &KakLint{config, linter, output}
+func New(config *config.Config, output io.Writer) *KakLint {
+	return &KakLint{config, output}
 }
 
-const tpl = `{{if len . -}}
+const commands = `{{if len . -}}
 set-option buffer lint_flags %val{timestamp}{{range .}} {{.Flag}}{{end}}
 set-option buffer lint_messages %val{timestamp}{{range .}} {{.Mess}}{{end}}
 lint-show-diagnostics
@@ -61,7 +50,7 @@ func (kl KakLint) Lint(linter, target string) error {
 
 	// Store error for later use since a linter failure generally
 	// means something is there for us to parse.
-	output, lintErr := kl.linter.Run(cmd)
+	output, lintErr := exec.Command(cmd[0], cmd[1:]...).CombinedOutput()
 
 	messages, err := errfmt.Parse(output, efm)
 	if err != nil {
@@ -76,10 +65,10 @@ func (kl KakLint) Lint(linter, target string) error {
 	}
 
 	// Parsed errors must be translated into Kakoune instructions.
-	templ, err := template.New("").Parse(tpl)
+	tpl, err := template.New("").Parse(commands)
 	if err != nil {
 		return err
 	}
 
-	return templ.Execute(kl.output, &messages)
+	return tpl.Execute(kl.output, &messages)
 }

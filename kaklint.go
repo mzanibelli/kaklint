@@ -1,12 +1,12 @@
 package kaklint
 
 import (
-	"fmt"
 	"io"
 	"kaklint/internal/config"
 	"kaklint/internal/errfmt"
 	"kaklint/internal/linter"
 	"os"
+	"text/template"
 )
 
 // Default is the default instance.
@@ -38,6 +38,14 @@ func New(config Config, linter Linter, output io.Writer) *KakLint {
 	return &KakLint{config, linter, output}
 }
 
+const tpl = `{{if len . -}}
+set-option buffer lint_flags %val{timestamp}{{range .}} {{.Kind}}{{end}}
+set-option buffer lint_messages %val{timestamp}{{range .}} {{.Mess}}{{end}}
+lint-show-diagnostics
+{{else -}}
+lint-hide-diagnostics
+{{end}}`
+
 // Lint runs the linter and formats results into Kakoune's format.
 func (kl KakLint) Lint(linter, target string) error {
 	cmd, efm, global, err := kl.config.Get(linter)
@@ -67,11 +75,11 @@ func (kl KakLint) Lint(linter, target string) error {
 		return lintErr
 	}
 
-	for _, mess := range messages {
-		if _, err := fmt.Fprintln(kl.output, mess); err != nil {
-			return err
-		}
+	// Parsed errors must be translated into Kakoune instructions.
+	templ, err := template.New("").Parse(tpl)
+	if err != nil {
+		return err
 	}
 
-	return nil
+	return templ.Execute(kl.output, &messages)
 }

@@ -10,6 +10,7 @@ func main() {
 	if len(os.Args) < 3 {
 		usage()
 	}
+
 	if err := kaklint.Default.Lint(os.Args[1], os.Args[2]); err != nil {
 		exit(err)
 	}

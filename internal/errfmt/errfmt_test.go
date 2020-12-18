@@ -23,8 +23,14 @@ func TestErrfmt(t *testing.T) {
 		t.Errorf("want: 1 entry, got: %d", len(entries))
 	}
 
-	want := "testdata/badfile.php:5:1: error: PHP Parse error:  syntax error, unexpected 'die' (T_EXIT), expecting ';' or ','"
-	got := fmt.Sprint(entries[0])
+	want := `"5|x"`
+	got := fmt.Sprint(entries[0].Kind)
+	if want != got {
+		t.Errorf("want: %s, got: %s", want, got)
+	}
+
+	want = `"5|PHP Parse error:  syntax error, unexpected 'die' (T_EXIT), expecting ';' or ','"`
+	got = fmt.Sprint(entries[0].Mess)
 	if want != got {
 		t.Errorf("want: %s, got: %s", want, got)
 	}

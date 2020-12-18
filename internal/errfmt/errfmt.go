@@ -34,7 +34,7 @@ func newEntry(e *errorformat.Entry) Entry {
 	if e.Col == 0 {
 		e.Col = 1
 	}
-	return Entry{e}
+	return Entry{kind(e), mess(e)}
 }
 
 const (
@@ -49,28 +49,42 @@ const (
 )
 
 // Entry is a wrapper to errorformat.Entry.
-type Entry struct{ *errorformat.Entry }
-
-// String implements fmt.Stringer.
-func (e Entry) String() string {
-	return fmt.Sprintf("%s:%d:%d: %s: %s", e.Filename, e.Lnum, e.Col, e.Kind(), e.Text)
+type Entry struct {
+	Kind string
+	Mess string
 }
 
-// Kind returns the error kind. Kakoune only supports Warning or Error.
 // See: https://github.com/reviewdog/errorformat/blob/55531c7dabdfad07a928152b1c6eb9dcd2eb3bdb/errorformat.go#L138
-func (e Entry) Kind() string {
+func kind(e *errorformat.Entry) string {
+	var icon string
+
 	switch kind := e.Types(); {
 
 	// Third-party lib doesn't seem to support notes. If they do
 	// one day, some tests should break (shellcheck-note).
 	case strings.Index(kind, Note) == 0:
-		return Warning
+		icon = "?"
 
 	case strings.Index(kind, Info) == 0:
-		return Warning
+		icon = "?"
 	case strings.Index(kind, Warning) == 0:
-		return Warning
+		icon = "!"
 	default:
-		return Error
+		icon = "x"
 	}
+
+	return spec(e.Lnum, icon)
+}
+
+// Handle pipe in flag message: there is currently no other way than
+// escaping pipes with backslashes, but this displays a literal backslash
+// in the resulting info message.
+func mess(e *errorformat.Entry) string {
+	return spec(e.Lnum, strings.Replace(e.Text, `|`, `\|`, -1))
+}
+
+// Quote string with "...". Any "" must be doubled.
+// See: :doc commands-parsing
+func spec(line int, text string) string {
+	return fmt.Sprintf(`"%d|%s"`, line, strings.Replace(text, `"`, `""`, -1))
 }

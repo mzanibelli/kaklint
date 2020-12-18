@@ -1,1 +1,3 @@
-/kaklint/testdata/snapshots/rustfmt-error/input:2:2: error: this file contains an unclosed delimiter
+set-option buffer lint_flags %val{timestamp} "2|x"
+set-option buffer lint_messages %val{timestamp} "2|this file contains an unclosed delimiter"
+lint-show-diagnostics

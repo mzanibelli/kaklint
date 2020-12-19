@@ -11,3 +11,6 @@ test:
 
 install:
 	go install ./cmd/kaklint
+
+clean:
+	rm -f kaklint

@@ -15,7 +15,7 @@
   "cargo": {
     "cmd": ["cargo", "check", "--quiet", "--message-format=short"],
     "efm": ["%f:%l:%c: %m"],
-    "global": true
+    "pkg": true
   },
   "rustfmt": {
     "cmd": ["rustfmt", "--check"],

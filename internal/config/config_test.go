@@ -10,7 +10,9 @@ import (
 )
 
 func TestConfig(t *testing.T) {
-	if _, err := config.New("/dev/null"); err == nil {
+	cfg := config.New()
+
+	if err := cfg.Load("/dev/null"); err == nil {
 		t.Error("config should require valid JSON")
 	}
 
@@ -19,8 +21,9 @@ func TestConfig(t *testing.T) {
 		t.Error(err)
 	}
 
-	cfg, err := config.New(path.Join(cwd, "..", "..", "testdata", "kaklint.json"))
-	if err != nil {
+	file := path.Join(cwd, "..", "..", "testdata", "kaklint.json")
+
+	if err := cfg.Load(file); err != nil {
 		t.Error(err)
 	}
 

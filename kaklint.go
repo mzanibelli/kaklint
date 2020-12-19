@@ -37,14 +37,14 @@ lint-hide-diagnostics
 
 // Lint runs the linter and formats results into Kakoune's format.
 func (kl KakLint) Lint(linter, target string) error {
-	cmd, efm, global, err := kl.config.Get(linter)
+	cmd, efm, pkg, err := kl.config.Get(linter)
 	if err != nil {
 		return err
 	}
 
-	// If global is set, run the linter without arguments.
+	// If pkg is set, run the linter without arguments.
 	// TODO: move to git top-level if any?
-	if !global {
+	if !pkg {
 		cmd = append(cmd, target)
 	}
 

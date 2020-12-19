@@ -13,36 +13,34 @@ var Default *Config
 
 // Initialize a default configuration without checking for errors.
 func init() {
-	confDir := os.Getenv("XDG_CONFIG_DIR")
-	if confDir == "" {
-		confDir = path.Join(os.Getenv("HOME"), ".config")
-	}
-	Default, _ = New(path.Join(confDir, "kaklint.json"))
+	Default = New()
+	Default.Load(path.Join(os.Getenv("HOME"), ".config", "kaklint.json"))
+	Default.Load(".kaklint.json") // Allow project-level overrides.
 }
 
 // Config holds the configuration. It maps a file type to a configuration
 // entry.
-type Config struct {
-	linters map[string]Linter
-}
+type Config struct{ linters map[string]Linter }
 
-// New decodes JSON configuration from the given files and creates a new Config object.
-func New(filename string) (*Config, error) {
-	cfg := new(Config)
+// New returns a new configuration object.
+func New() *Config { return &Config{make(map[string]Linter)} }
+
+// Load decodes JSON configuration from the given file.
+func (cfg *Config) Load(filename string) error {
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return cfg, err
+		return err
 	}
 	if err := json.Unmarshal(content, &cfg.linters); err != nil {
-		return cfg, err
+		return err
 	}
-	return cfg, nil
+	return nil
 }
 
 // Get returns the configuration for a given linter.
 func (cfg *Config) Get(linter string) ([]string, []string, bool, error) {
 	if entry, ok := cfg.linters[linter]; ok {
-		return entry.Cmd, entry.Efm, entry.Global, nil
+		return entry.Cmd, entry.Efm, entry.Pkg, nil
 	}
 	return nil, nil, false, ErrMissingConfiguration{linter}
 }
@@ -57,7 +55,7 @@ func (err ErrMissingConfiguration) Error() string {
 
 // Linter is a configuration entry.
 type Linter struct {
-	Cmd    []string `json:"cmd"`
-	Efm    []string `json:"efm"`
-	Global bool     `json:"global"`
+	Cmd []string `json:"cmd"` // Which command to run.
+	Efm []string `json:"efm"` // Which shape do error messages have.
+	Pkg bool     `json:"pkg"` // Should the command run at package level?
 }

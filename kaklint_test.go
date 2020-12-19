@@ -18,8 +18,8 @@ func TestKakLint(t *testing.T) {
 
 	out := bytes.NewBuffer(nil)
 
-	cfg, err := config.New(path.Join("testdata", "kaklint.json"))
-	if err != nil {
+	cfg := config.New()
+	if err := cfg.Load(path.Join("testdata", "kaklint.json")); err != nil {
 		t.Fatal(err)
 	}
 

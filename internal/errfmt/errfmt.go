@@ -26,7 +26,14 @@ func Parse(input []byte, shape []string) ([]Entry, error) {
 	return res, nil
 }
 
+// Entry is a wrapper to errorformat.Entry.
+type Entry struct {
+	Flag string
+	Mess string
+}
+
 // Kakoune linter bugs if lines or columns are not greater than 0.
+// TODO: check if line and column are too big...
 func newEntry(e *errorformat.Entry) Entry {
 	if e.Lnum == 0 {
 		e.Lnum = 1
@@ -38,36 +45,23 @@ func newEntry(e *errorformat.Entry) Entry {
 }
 
 const (
-	// Info is a kind of entry that represents a informational message.
-	Info string = "info"
-	// Note is a kind of entry that represents a simple note.
-	Note string = "note"
-	// Warning is a kind of entry that represents a warning message.
-	Warning string = "warning"
-	// Error is a kind of entry that represents an error message.
-	Error string = "error"
+	info    string = "info"
+	note    string = "note"
+	warning string = "warning"
 )
 
-// Entry is a wrapper to errorformat.Entry.
-type Entry struct {
-	Flag string
-	Mess string
-}
-
+// Third-party lib doesn't seem to support notes. If they do one day,
+// some tests should break (shellcheck-note).
 // See: https://github.com/reviewdog/errorformat/blob/55531c7dabdfad07a928152b1c6eb9dcd2eb3bdb/errorformat.go#L138
 func flag(e *errorformat.Entry) string {
 	var icon string
 
 	switch kind := e.Types(); {
-
-	// Third-party lib doesn't seem to support notes. If they do
-	// one day, some tests should break (shellcheck-note).
-	case strings.Index(kind, Note) == 0:
+	case strings.Index(kind, note) == 0:
 		icon = "?"
-
-	case strings.Index(kind, Info) == 0:
+	case strings.Index(kind, info) == 0:
 		icon = "?"
-	case strings.Index(kind, Warning) == 0:
+	case strings.Index(kind, warning) == 0:
 		icon = "!"
 	default:
 		icon = "x"

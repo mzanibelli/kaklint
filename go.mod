@@ -1,5 +1,5 @@
 module kaklint
 
-go 1.15
+go 1.16
 
-require github.com/reviewdog/errorformat v0.0.0-20201214112724-34272353d2f6
+require github.com/reviewdog/errorformat v0.0.0-20210207101503-c33bebfa8b85

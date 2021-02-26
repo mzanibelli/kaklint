@@ -3,7 +3,6 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 )
@@ -27,7 +26,7 @@ func New() *Config { return &Config{make(map[string]Linter)} }
 
 // Load decodes JSON configuration from the given file.
 func (cfg *Config) Load(filename string) error {
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		return err
 	}

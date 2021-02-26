@@ -2,7 +2,7 @@ package kaklint_test
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io/fs"
 	"kaklint"
 	"kaklint/internal/config"
 	"os"
@@ -65,15 +65,15 @@ type snapshot struct {
 func snapshots() ([]snapshot, error) {
 	root := path.Join("testdata", "snapshots")
 
-	dirs, err := ioutil.ReadDir(root)
+	dirs, err := os.ReadDir(root)
 	if err != nil {
 		return nil, err
 	}
 
 	res := make([]snapshot, len(dirs), len(dirs))
 
-	for i, fi := range dirs {
-		snap, err := parse(root, fi)
+	for i, entry := range dirs {
+		snap, err := parse(root, entry)
 		if err != nil {
 			return nil, err
 		}
@@ -83,24 +83,24 @@ func snapshots() ([]snapshot, error) {
 	return res, nil
 }
 
-func parse(root string, fi os.FileInfo) (snapshot, error) {
-	input := path.Join(root, fi.Name(), "input")
+func parse(root string, entry fs.DirEntry) (snapshot, error) {
+	input := path.Join(root, entry.Name(), "input")
 
-	ftPath := path.Join(root, fi.Name(), "linter")
+	ftPath := path.Join(root, entry.Name(), "linter")
 
-	linter, err := ioutil.ReadFile(ftPath)
+	linter, err := os.ReadFile(ftPath)
 	if err != nil {
 		return snapshot{}, err
 	}
 
-	wantPath := path.Join(root, fi.Name(), "want")
+	wantPath := path.Join(root, entry.Name(), "want")
 
-	want, err := ioutil.ReadFile(wantPath)
+	want, err := os.ReadFile(wantPath)
 	if err != nil {
 		return snapshot{}, err
 	}
 
 	ft := strings.TrimSpace(string(linter))
 
-	return snapshot{fi.Name(), ft, input, want}, nil
+	return snapshot{entry.Name(), ft, input, want}, nil
 }

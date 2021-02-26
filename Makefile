@@ -7,7 +7,7 @@ kaklint: kaklint.go $(SRC)
 test:
 	go vet ./...
 	go test ./...
-	docker-compose --no-ansi run --rm testing
+	docker-compose run --rm testing
 
 install:
 	go install ./cmd/kaklint

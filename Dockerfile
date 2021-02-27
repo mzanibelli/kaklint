@@ -1,7 +1,7 @@
-FROM alpine:latest
+FROM golang:alpine
 
 RUN apk update
-RUN apk add git php go shellcheck rust npm curl
+RUN apk add git php shellcheck npm curl
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 

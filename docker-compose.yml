@@ -1,5 +1,0 @@
-services:
-  testing:
-    build: .
-    volumes:
-      - $PWD:/kaklint

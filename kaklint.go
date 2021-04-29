@@ -52,7 +52,7 @@ func (kl KakLint) Lint(linter, target string) error {
 	// means something is there for us to parse.
 	output, lintErr := exec.Command(cmd[0], cmd[1:]...).CombinedOutput()
 
-	messages, err := errfmt.Parse(output, efm)
+	messages, err := errfmt.Parse(output, efm, target)
 	if err != nil {
 		return err
 	}

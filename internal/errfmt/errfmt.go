@@ -3,6 +3,7 @@ package errfmt
 import (
 	"bytes"
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	"github.com/reviewdog/errorformat"
@@ -10,7 +11,7 @@ import (
 
 // Parse uses the third-party library to parse a given input using a
 // given efm. It returns entries that can be understood by Kakoune.
-func Parse(input []byte, shape []string) ([]Entry, error) {
+func Parse(input []byte, shape []string, target string) ([]Entry, error) {
 	res := make([]Entry, 0)
 
 	efm, err := errorformat.NewErrorformat(shape)
@@ -20,10 +21,31 @@ func Parse(input []byte, shape []string) ([]Entry, error) {
 
 	scanner := efm.NewScanner(bytes.NewBuffer(input))
 	for scanner.Scan() {
-		res = append(res, newEntry(scanner.Entry()))
+		ent := scanner.Entry()
+		ok, err := sameFile(ent.Filename, target)
+		if err != nil {
+			return res, err
+		}
+		if ok {
+			res = append(res, newEntry(ent))
+		}
 	}
 
 	return res, nil
+}
+
+func sameFile(entry, target string) (bool, error) {
+	a, err := filepath.Abs(entry)
+	if err != nil {
+		return false, err
+	}
+
+	b, err := filepath.Abs(target)
+	if err != nil {
+		return false, err
+	}
+
+	return a == b, nil
 }
 
 // Entry is a wrapper to errorformat.Entry.

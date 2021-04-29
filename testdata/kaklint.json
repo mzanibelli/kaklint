@@ -3,6 +3,16 @@
     "cmd": ["golint"],
     "efm": ["%f:%l:%c: %m"]
   },
+  "golangci": {
+    "cmd": [
+      "golangci-lint",
+      "run",
+      "--out-format=line-number",
+      "--print-issued-lines=false"
+    ],
+    "efm": ["%f:%l:%c: %m", "%f:%l: %m"],
+    "pkg": true
+  },
   "shellcheck": {
     "cmd": ["shellcheck", "-f", "gcc"],
     "efm": [

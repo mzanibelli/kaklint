@@ -96,11 +96,11 @@ func flag(e *errorformat.Entry) string {
 // escaping pipes with backslashes, but this displays a literal backslash
 // in the resulting info message.
 func mess(e *errorformat.Entry) string {
-	return spec(e.Lnum, strings.Replace(e.Text, `|`, `\|`, -1))
+	return spec(e.Lnum, strings.ReplaceAll(e.Text, `|`, `<pipe>`))
 }
 
 // Quote string with "...". Any "" must be doubled.
-// See: :doc commands-parsing
+// See: :doc commands-parsing.
 func spec(line int, text string) string {
-	return fmt.Sprintf(`"%d|%s"`, line, strings.Replace(text, `"`, `""`, -1))
+	return fmt.Sprintf(`"%d|%s"`, line, strings.ReplaceAll(text, `"`, `""`))
 }

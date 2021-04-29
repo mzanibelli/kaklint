@@ -31,13 +31,12 @@ func TestKakLint(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		t.Run(test.name, check(test, cfg, kl, out))
+		t.Run(test.name, check(test, kl, out))
 	}
 }
 
 func check(
 	test snapshot,
-	cfg *config.Config,
 	kl *kaklint.KakLint,
 	out *bytes.Buffer,
 ) func(t *testing.T) {
@@ -70,7 +69,7 @@ func snapshots() ([]snapshot, error) {
 		return nil, err
 	}
 
-	res := make([]snapshot, len(dirs), len(dirs))
+	res := make([]snapshot, len(dirs))
 
 	for i, entry := range dirs {
 		snap, err := parse(root, entry)

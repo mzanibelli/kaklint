@@ -14,7 +14,7 @@ Errors parsing testdata/badfile.php
 func TestErrfmt(t *testing.T) {
 	phpEfm := []string{"%m in %f on line %l", "%-G%.%#"}
 
-	entries, err := errfmt.Parse([]byte(phpError), phpEfm)
+	entries, err := errfmt.Parse([]byte(phpError), phpEfm, "testdata/badfile.php")
 	if err != nil {
 		t.Error(err)
 	}

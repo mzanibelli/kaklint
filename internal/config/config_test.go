@@ -37,8 +37,7 @@ func TestConfig(t *testing.T) {
 		t.Error(err)
 	}
 
-	want := []string{"php", "-l"}
-	if !reflect.DeepEqual(want, cmd) {
+	if want := []string{"php", "-l"}; !reflect.DeepEqual(want, cmd) {
 		t.Errorf("want: %v, got: %v", want, cmd)
 	}
 }

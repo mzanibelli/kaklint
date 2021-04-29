@@ -50,6 +50,7 @@ func (kl KakLint) Lint(linter, target string) error {
 
 	// Store error for later use since a linter failure generally
 	// means something is there for us to parse.
+	//nolint:gosec
 	output, lintErr := exec.Command(cmd[0], cmd[1:]...).CombinedOutput()
 
 	messages, err := errfmt.Parse(output, efm, target)

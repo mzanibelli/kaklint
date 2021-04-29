@@ -13,8 +13,8 @@ var Default *Config
 // Initialize a default configuration without checking for errors.
 func init() {
 	Default = New()
-	Default.Load(path.Join(os.Getenv("HOME"), ".config", "kaklint.json"))
-	Default.Load(".kaklint.json") // Allow project-level overrides.
+	_ = Default.Load(path.Join(os.Getenv("HOME"), ".config", "kaklint.json"))
+	_ = Default.Load(".kaklint.json") // Allow project-level overrides.
 }
 
 // Config holds the configuration. It maps a file type to a configuration
@@ -30,10 +30,7 @@ func (cfg *Config) Load(filename string) error {
 	if err != nil {
 		return err
 	}
-	if err := json.Unmarshal(content, &cfg.linters); err != nil {
-		return err
-	}
-	return nil
+	return json.Unmarshal(content, &cfg.linters)
 }
 
 // Get returns the configuration for a given linter.

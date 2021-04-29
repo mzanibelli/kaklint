@@ -4,9 +4,10 @@ SRC += internal/errfmt/errfmt.go
 kaklint: kaklint.go $(SRC)
 	go build -o kaklint cmd/kaklint/main.go
 
-test:
-	go vet ./...
-	go test ./...
+lint:
+	golangci-lint run ./...
+
+test: lint
 	docker build -t kaklint-testing .
 	docker run --rm --volume $(shell pwd):/kaklint kaklint-testing
 

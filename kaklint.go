@@ -1,12 +1,14 @@
 package kaklint
 
 import (
+	"context"
 	"io"
 	"kaklint/internal/config"
 	"kaklint/internal/errfmt"
 	"os"
 	"os/exec"
 	"text/template"
+	"time"
 )
 
 // Default is the default instance.
@@ -48,10 +50,14 @@ func (kl KakLint) Lint(linter, target string) error {
 		cmd = append(cmd, target)
 	}
 
+	// Do not allow the linter to run forever.
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	// Store error for later use since a linter failure generally
 	// means something is there for us to parse.
 	//nolint:gosec
-	output, lintErr := exec.Command(cmd[0], cmd[1:]...).CombinedOutput()
+	output, lintErr := exec.CommandContext(ctx, cmd[0], cmd[1:]...).CombinedOutput()
 
 	messages, err := errfmt.Parse(output, efm, target)
 	if err != nil {

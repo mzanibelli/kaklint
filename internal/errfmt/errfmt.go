@@ -96,7 +96,10 @@ func flag(e *errorformat.Entry) string {
 // escaping pipes with backslashes, but this displays a literal backslash
 // in the resulting info message.
 func mess(e *errorformat.Entry) string {
-	return spec(e.Lnum, strings.ReplaceAll(e.Text, `|`, `<pipe>`))
+	txt := e.Text
+	txt = strings.ReplaceAll(txt, `|`, `<pipe>`)
+	txt = strings.ReplaceAll(txt, `%`, `<percent>`)
+	return spec(e.Lnum, txt)
 }
 
 // Quote string with "...". Any "" must be doubled.

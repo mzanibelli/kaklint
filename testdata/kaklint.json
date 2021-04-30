@@ -8,7 +8,9 @@
       "golangci-lint",
       "run",
       "--out-format=line-number",
-      "--print-issued-lines=false"
+      "--print-issued-lines=false",
+      "--max-issues-per-linter=0",
+      "--max-same-issues=0"
     ],
     "efm": ["%f:%l:%c: %m", "%f:%l: %m"],
     "pkg": true

@@ -9,6 +9,9 @@ import (
 	"os/exec"
 	"text/template"
 	"time"
+
+	// Needed for rendering commands.
+	_ "embed"
 )
 
 // Default is the default instance.
@@ -29,13 +32,8 @@ func New(config *config.Config, output io.Writer) *KakLint {
 	return &KakLint{config, output}
 }
 
-const commands = `{{if len . -}}
-set-option buffer lint_flags %val{timestamp}{{range .}} {{.Flag}}{{end}}
-set-option buffer lint_messages %val{timestamp}{{range .}} {{.Mess}}{{end}}
-lint-show-diagnostics
-{{else -}}
-lint-hide-diagnostics
-{{end}}`
+//go:embed commands.tmpl
+var commands string
 
 // Lint runs the linter and formats results into Kakoune's format.
 func (kl KakLint) Lint(linter, target string) error {

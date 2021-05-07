@@ -8,6 +8,7 @@ lint:
 	golangci-lint run ./...
 
 test: lint
+	go test /...
 	docker build -t kaklint-testing .
 	docker run --rm --volume $(shell pwd):/kaklint kaklint-testing
 

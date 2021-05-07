@@ -1,0 +1,7 @@
+{{if len . -}}
+set-option buffer lint_flags %val{timestamp}{{range .}} {{.Flag}}{{end}}
+set-option buffer lint_messages %val{timestamp}{{range .}} {{.Mess}}{{end}}
+lint-show-diagnostics
+{{else -}}
+lint-hide-diagnostics
+{{end -}}

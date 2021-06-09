@@ -65,7 +65,7 @@ func (kl KakLint) Lint(linter, target string) error {
 	// If there was an error executing the linter but no messages
 	// were parsed, this means we made a configuration mistake or
 	// something unexpected happened.
-	if len(messages) == 0 && lintErr != nil {
+	if messages == nil && lintErr != nil {
 		return lintErr
 	}
 

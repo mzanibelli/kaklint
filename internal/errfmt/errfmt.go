@@ -9,26 +9,35 @@ import (
 	"github.com/reviewdog/errorformat"
 )
 
-// Parse uses the third-party library to parse a given input using a
-// given efm. It returns entries that can be understood by Kakoune.
+// Parse uses the third-party library to parse a given input using a given efm.
+// It returns entries that can be understood by Kakoune. The result is nil if no
+// message was found, including those which don't match the current buffer.
 func Parse(input []byte, shape []string, target string) ([]Entry, error) {
 	res := make([]Entry, 0)
 
 	efm, err := errorformat.NewErrorformat(shape)
 	if err != nil {
-		return res, err
+		return nil, err
 	}
 
-	scanner := efm.NewScanner(bytes.NewBuffer(input))
+	scanner, found := efm.NewScanner(bytes.NewBuffer(input)), false
 	for scanner.Scan() {
+		found = true
+
 		ent := scanner.Entry()
+
 		ok, err := sameFile(ent.Filename, target)
 		if err != nil {
 			return res, err
 		}
+
 		if ok {
 			res = append(res, newEntry(ent))
 		}
+	}
+
+	if !found {
+		return nil, nil
 	}
 
 	return res, nil

@@ -28,7 +28,6 @@ linters:
     - godot
     - gofmt
     - goimports
-    - golint
     - gosec
     - gosimple
     - govet
